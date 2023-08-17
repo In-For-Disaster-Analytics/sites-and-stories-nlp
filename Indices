@@ -1,3 +1,0 @@
-# Repository of Indices for assorted NLP projects utilizing different embedding models.
-
-The current indices have been generated for the grey literature corpus of the Alaska NNA project using the LlamaIndex package. The attached notebooks outline the coding process used to generate these files.
