@@ -1,3 +1,4 @@
+# Creating Indices: LlamaIndex
 Data indices were created for the grey literature corpus of the Alaska NNA project utilizing the LlamaIndex package and a paid OpenAI account.  
 
 To recreate these output you will need to:  
