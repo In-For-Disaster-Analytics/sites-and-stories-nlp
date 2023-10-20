@@ -10,3 +10,11 @@ This dataset includes anonymized interview data collected virtually and in-perso
 * [Interview Data from April 2022: End-Users' Perceptions of Water Services in Rural Alaska](https://arcticdata.io/catalog/view/doi%3A10.18739%2FA26Q1SJ48)
 Abstract (from Catalog):  
 This dataset includes anonymized interview data collected in the Yukon-Kuskokwim Delta in April 2022. These interviews were designed to capture end-users' perceptions and experiences with their water infrastructure systems. Interview questions included, for example: Can you tell me how you use water in your household?; What do you like about your water or water system?; What are some of the concerns/challenges you deal with in your household water system?; Do you worry about whether your water is safe to drink? Forty-one semi-structured interviews with 55 end-users are included. These interviews were conducted from April 21st to April 29th, 2022. Forty of the interviews were conducted in-person and one was conducted via teleconferencing. Interviews were recorded (with permission), transcribed, checked for quality, and anonymized.
+
+## Data Cleaning
+Arctic Data Center catalogs are in the format of pdfs of transcribed and redacted interviews.  The combined 21-22 pdf contains transcript is 2 formats, and the April 22 pdf is formatted in a 3rd style.
+
+These input pdfs were digested and cleaned in the [Extract Interview Data](Extract Interview Data.ipynb) notebook to produce a csv containing infomatio non the starting file, page and block in the original pdf, speaker, and text.
+
+## Data Analysis with BERTopic
+The BERTopic package was used on this input data to extract keyword based topic suggestions.  
