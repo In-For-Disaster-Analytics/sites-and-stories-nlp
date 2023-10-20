@@ -4,7 +4,7 @@
 Public data (used for pipelins that incorporate OpenA)
 
 * [Interviews with Water Sector Stakeholders in Rural Alaska, 2021-2022](https://arcticdata.io/catalog/view/doi%3A10.18739%2FA29Z90D4B)  - Class Comparison Graphic Topic A
-Abstract (from Catalog):  
+- * Abstract (from Catalog):  
 This dataset includes anonymized interview data collected virtually and in-person with stakeholders from the Yukon-Kuskokwim Delta between November 2021 and August 2022. These interviews were designed to capture water sector stakeholders’ experiences and perceptions of their water infrastructure systems. Interview questions included, for example: “Can you walk us through a typical workday in your role?”; “Who do you interact with most often in your role?”; “What are some of the biggest challenges you face in your role in the water sector?”; and “How do you resolve issues that arise in the water system?” We conducted eight virtual interviews and nine in-person interviews with stakeholders between November 22, 2021 and August 5, 2022. Interviews were recorded (with permission), transcribed, checked for quality, and anonymized for archival.
 
 * [Interview Data from April 2022: End-Users' Perceptions of Water Services in Rural Alaska](https://arcticdata.io/catalog/view/doi%3A10.18739%2FA26Q1SJ48)
