@@ -3,22 +3,22 @@ created: 2023-10-11T12:48
 updated: 2023-10-19T12:10
 ---
 # Working with Jupyter Notebook and Conda Environments at TACC
-Jupyter notebooks provide an interactive web based computing platform for working on coding projects. Conda envrionemnts enable users to specify a siloed set of versioned python packages to work with. 
+Jupyter notebooks provide an interactive web based computing platform for working on coding projects. Conda envrionments enable users to specify an isolated set of versioned python packages to work with. 
 
 This notebook will walk you through the process of setting up a custom Conda env on TACC systems, and using that environmnet in a jupyter notebook.
 
 ## TACC Access and Permissions
-The first step is ensuring you have the necessary access to TACC systems.  For this process you will need the following:  
-* TACC username and password (Check: can you log-in to [TACC Portal](https://tacc.utexas.edu/portal/))
-* TACC Token 2 factor authentication app
-* Assignment to an allocation to use compute resources at TACC (Check the 'Projects & Allocations' tab on the TACC Portal and ensure you have an Active Project with an unexpired allocation)
+The first step is ensuring you have the necessary access to TACC systems.  For this process you will need ALL of the following:  
+1. TACC username and password (Check: can you log-in to [TACC Portal](https://tacc.utexas.edu/portal/))
+2. [TACC multifactor authentication](https://docs.tacc.utexas.edu/basics/mfa/), you will use this to enter an authenticating 'TACC Token' as needed
+3. Assignment to an allocation to use compute resources at TACC (Check the 'Projects & Allocations' tab on the TACC Portal and ensure you have an Active Project with an unexpired allocation on Lonestar6)
 
 ## Creating a Conda environment at TACC and adding it to Notebook kernels
-Python environments (here managed with Conda) allow you to isolate a particular set of packages (and their versions) in order to run your code using a very defined set of software.  To set up and utilize a Conda environment at TACC you will do the following step:
+Python environments (here managed with Conda) allow you to isolate a particular set of packages (and their versions) in order to run your code using a very defined set of software.  To set up and utilize a Conda environment at TACC you will do the following steps:
 1. Access TACC systems via the Command Line
 2. Navigate to proper TACC directory
 3. Install Conda (only necessary the first time)
-4. Create Conda environment either from set of packages devined in a .yml file or by manually installing them
+4. Create Conda environment either from set of packages defined in a .yml file or by manually installing them
 5. Add the new environment as a kernel for use in Jupyter
 
 ## 1. Accessing the TACC Command Line
@@ -42,27 +42,29 @@ If you're using windows you'll need to use the Putty Software
             - Enter **Lonestar6** into the **Saved Sessions** text box, then click **Save**
             - Next time select **Lonestar6** from the **Saved Sessions** list and click **Load**.
     - click **Open** button
-    - answer **Yes** to the SSH security question
+    - answer **Yes** to the SSH security question if it appears
 - In the **PuTTY** terminal
     - enter your TACC user id after the **"login as**:**"** prompt, then **Enter**
     - enter the password associated with your TACC account
-    - provide your 2-factor authentication code
+    - provide your 2-factor authentication code  
+
+**Note that you won't see the cursor move while you type your password or token into the putty terminal. Simply type and then hit enter.**
+
 *The putty instructions were copied from [Getting Started at TACC Wiki](https://wikis.utexas.edu/display/CoreNGSTools/Getting+started+at+TACC) by Anna M Battenhouse.*
 
-Note that you won't see the cursor move while you type your password or token into the putty terminal. Simply type and then hit enter.
+
 
 ## 2. Navigate to proper TACC directory
 When accessing TACC systems, you are initially located in the $HOME directory.  TACC has three files systems: $HOME, $WORK, and $SCRATCH.  A fuller discussion of these systems are available on the [TACC Lonestar6 documentation](https://docs.tacc.utexas.edu/hpc/lonestar6/#files).  For this exercise we will work on $SCRATCH.
 
-For those new to working in the terminal, a few commands that are helpful to know include:
+For those new to working in the terminal, a few unix commands that are helpful to know include the following (or check out a more extensive unix cheat sheet [here](https://mally.stanford.edu/~sr/computing/basic-unix.html))
 
 * pwd: display current working directory
 * ls: list files
-* ls -a: list all files, including hidden
 * cd: change directory
 * mkdir {name}: make a new directory called {name}
 
-If you type `pwd` in the terminal, you will see the actual path to your $HOME directory. This should look something like `/home1/01234/username`.  Since the longer addresses would be tedious to type all the time when moving between directories, TACC provides the following alias commands:
+If you type `pwd` in the terminal, you will see the actual path to your $HOME directory. This should look something like `/home1/01234/username`. For moving between directories, TACC provides the following alias commands:
 | **Alias** 	|** Command**  	| 
 |---	|---	|
 |`cd` or `cdh`  	| `cd $HOME`  	|  	
@@ -89,20 +91,31 @@ Make sure to close out your terminal / putty after installing conda and reopen t
 ## 4. Create Conda environment
 
 ### 4a. Transfer .yml file into directory
-If you don't already have a directory and files for your project, use `mkdir {name}` to create a new directory and `cd {name}` to move into it. The use the [TACC data transfer protocols](https://docs.tacc.utexas.edu/basics/datatransferguide/) to copy a .yml file from your local computer into this directory. Use `pwd` to get the proper filepath.
+If you don't already have a directory and files for your project, use `mkdir new_directory_name` to create a new directory and `cd new_directory_name` to move into it. Use the [TACC data transfer protocols](https://docs.tacc.utexas.edu/basics/datatransferguide/) to copy a .yml file from your local computer into this directory.  
+
+This will look something like the following, replacing 'environment.yml' with the name of your yml file, 'username' with your TACC username and '/scratch/01234/username/new_directory_name' with the output from `pwd`:
+
+    scp environment.yml username@ls6.tacc.utexas.edu:/scratch/01234/username/new_directory_name
 
 ### 4b. Create Conda environment 
+To create a pre-set environment **from a .yml file**: 
+Activate the base conda environment with
+
+    conda activate
+    
+Navigate into the directory where your environment.yml file is located and create a new environment by running the following commands - replacing 'my-new-env' with a name of your no choice (but no spaces!) and 'environment.yml' with the filename of your environment .yml file. 
+
+    conda env create --name my-new-env --file environment.yml 
+    
+
 To create an environment **from scratch**: 
 Simply follow standard [Conda environment management](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) protocols. 
 
-To create a pre-set environment **from a .yml file**: 
-Navigate into the directory where your environment.yml file is located and create a my-new-env environment by running the following commands to create and then activate your new environment:
+### 4b. Add Conda environment as a kernel in Jupyter
+To add the new environment as a kernel in your Jupyter notebook you first activate your enfironment, install ipykernel in the activated environment and, then create a Jupyter kernel from your env:
 
-    conda env create --name my-new-env --file environment.yml 
-    onda activate my-new-env
-
-To add the new environment as a kernel in your Jupyter notebook you install ipykernel in the activated environment and give it a display name for the Jupyter dropdown:
-
+    conda activate my-new-env
+    pip install ipykernel
     python -m ipykernel install --user --name my-new-env --display-name "Python (My New Env)"
 
 ## 5. Working with Jupyter Notebook at TACC
@@ -114,6 +127,9 @@ Request a Jupyter Notebook job using the following default elections - update th
 * Project: project sponsoring the work / which allocation you want to use
 * Queue: development 
 
-Submit job request and wait until it launches.
+Submit job request and wait until it launches. When the message says your session is running, simply click the green 'Connect' button or copy and paste the URL into the browser of your choice.
 
-Once it launches you can either start a new notebook, or use file transfer protocols to bring an existing notebook into your files for use.
+Once Jupyter launches you can either start a new notebook, or use file transfer protocols to bring an existing notebook into your files for use.
+
+### Adding additional packages
+If you find your use cases requires additional packages, simply search [Anaconda.org](https://anaconda.org/) for the package and isntallation code, then install them from the terminal.  Then restart the package in Jupyter to make the package code available.
