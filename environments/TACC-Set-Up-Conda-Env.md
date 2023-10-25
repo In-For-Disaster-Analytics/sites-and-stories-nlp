@@ -55,9 +55,11 @@ If you're using windows you'll need to use the Putty Software
 
 
 ## 2. Navigate to proper TACC directory
+Those new to working in the terminal / TACC should review the [Getting Started at TACC](https://wikis.utexas.edu/display/CoreNGSTools/Getting+started+at+TACC) documentation.
+
 When accessing TACC systems, you are initially located in the $HOME directory.  TACC has three files systems: $HOME, $WORK, and $SCRATCH.  A fuller discussion of these systems are available on the [TACC Lonestar6 documentation](https://docs.tacc.utexas.edu/hpc/lonestar6/#files).  For this exercise we will work on $SCRATCH.
 
-For those new to working in the terminal, a few unix commands that are helpful to know include the following (or check out a more extensive unix cheat sheet [here](https://mally.stanford.edu/~sr/computing/basic-unix.html))
+A few unix commands that are helpful to know are listed below, while a more extensive unix cheat sheet is available [here](https://mally.stanford.edu/~sr/computing/basic-unix.html)
 
 * pwd: display current working directory
 * ls: list files
@@ -83,7 +85,7 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O mi
 bash miniconda3/miniconda.sh -b -u -p miniconda3
 rm -rf miniconda3/miniconda.shcd
 ```
-Note: the installation may take a few minutes.
+Note: the installation may take a while.
 
 Make sure to close out your terminal / putty after installing conda and reopen to have conda available for use. 
 
@@ -91,9 +93,13 @@ Make sure to close out your terminal / putty after installing conda and reopen t
 ## 4. Create Conda environment
 
 ### 4a. Transfer .yml file into directory
-If you don't already have a directory and files for your project, use `mkdir new_directory_name` to create a new directory and `cd new_directory_name` to move into it. Use the [TACC data transfer protocols](https://docs.tacc.utexas.edu/basics/datatransferguide/) to copy a .yml file from your local computer into this directory.  
+If you don't already have a directory and files for your project, use `mkdir new_directory_name` to create a new directory and `cd new_directory_name` to move into it. Use the TACC data transfer protocols ([TACC documentation](https://docs.tacc.utexas.edu/basics/datatransferguide/)) to copy a .yml file from your local computer into your new directory.  
 
-This will look something like the following, replacing 'environment.yml' with the name of your yml file, 'username' with your TACC username and '/scratch/01234/username/new_directory_name' with the output from `pwd`:
+In the TACC terminal, type 'pwd' and copy this information - this is the destination you are trying to save your file *to*.
+
+On your local computer, open the command prompt and either navigate into the directory holding the .yml file. 
+
+use the scp command to transfer the file from your local computer to TACC.  This command will look something like the following, replacing 'environment.yml' with the name of your yml file, 'username' with your TACC username and '/scratch/01234/username/new_directory_name' with the output from `pwd`:
 
     scp environment.yml username@ls6.tacc.utexas.edu:/scratch/01234/username/new_directory_name
 
