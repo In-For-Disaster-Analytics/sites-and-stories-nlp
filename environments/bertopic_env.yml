@@ -1,4 +1,3 @@
-name: bert
 channels:
   - plotly
   - anaconda
@@ -236,4 +235,3 @@ dependencies:
       - torchvision==0.15.2
       - transformers==4.34.0
       - umap-learn==0.5.4
-prefix: C:\Users\lissa\miniconda3\envs\bert
