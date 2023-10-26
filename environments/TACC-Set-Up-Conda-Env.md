@@ -104,12 +104,12 @@ use the scp command to transfer the file from your local computer to TACC.  This
     scp environment.yml username@ls6.tacc.utexas.edu:/scratch/01234/username/new_directory_name
 
 ### 4b. Create Conda environment 
-To create a pre-set environment **from a .yml file**: 
-Activate the base conda environment with
+In the TACC terminal, activate the conda base environment with   
 
     conda activate
-    
-Navigate into the directory where your environment.yml file is located and create a new environment by running the following commands - replacing 'my-new-env' with a name of your no choice (but no spaces!) and 'environment.yml' with the filename of your environment .yml file. 
+
+To create a pre-set environment **from a .yml file**: 
+Navigate into the directory where your environment.yml file is located and create a new environment by running the following commands - replacing 'my-new-env' with a name of your no choice (but no spaces!) and 'environment.yml' with the filename of your .yml file. 
 
     conda env create --name my-new-env --file environment.yml 
     
