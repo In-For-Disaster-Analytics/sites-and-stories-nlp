@@ -4,6 +4,7 @@ channels:
 dependencies:
   - ipykernel
   - ipywidgets
+  - pip
   - pip:
       - beautifulsoup4
       - cython
