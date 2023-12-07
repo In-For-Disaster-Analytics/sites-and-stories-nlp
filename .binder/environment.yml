@@ -2,26 +2,20 @@ name: llm
 channels:
   - defaults
 dependencies:
+  - hdbscan
+  - numpy
+  - pandas
+  - python=3.9
+  - scikit-learn
+  - seaborn
+  - umap-learn
   - ipykernel
   - ipywidgets
-  - pip
   - pip:
-      - cython
       - ema-workbench
-      - hdbscan
       - huggingface-hub
       - llama-cpp-python
       - llama-index
-      - matplotlib
-      - numba
-      - numpy
-      - pandas
-      - pdfminer-six
-      - pymupdf
-      - pymupdfb
       - python-dotenv
-      - scikit-learn
-      - scipy
-      - seaborn
       - torch
       - transformers
