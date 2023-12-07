@@ -10,7 +10,6 @@ dependencies:
       - ema-workbench
       - hdbscan
       - huggingface-hub
-      - secrets
       - llama-cpp-python
       - llama-index
       - matplotlib
