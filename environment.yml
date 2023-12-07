@@ -11,7 +11,7 @@ dependencies:
       - ema-workbench
       - hdbscan
       - huggingface-hub
-      - jupyterlab-widgets
+      - secrets
       - llama-cpp-python
       - llama-index
       - matplotlib
@@ -25,7 +25,6 @@ dependencies:
       - scikit-learn
       - scipy
       - seaborn
-      - sentencepiece
       - torch
       - transformers
       - umap-learn
