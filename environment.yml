@@ -6,7 +6,6 @@ dependencies:
   - ipywidgets
   - pip
   - pip:
-      - beautifulsoup4
       - cython
       - ema-workbench
       - hdbscan
