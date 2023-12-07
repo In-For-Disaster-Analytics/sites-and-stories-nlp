@@ -25,4 +25,3 @@ dependencies:
       - seaborn
       - torch
       - transformers
-      - umap-learn
