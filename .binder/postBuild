@@ -18,7 +18,7 @@ NODE_HOSTNAME_LONG=$(hostname -f)     # Fully Qualified Domain Name  -->  c###-#
 
 echo "TACC: running on node $NODE_HOSTNAME_PREFIX on $NODE_HOSTNAME_DOMAIN"
 
-TAP_FUNCTIONS="/share/doc/slurm/tap_functions"
+TAP_FUNCTIONS="tap_functions"
 if [ -f ${TAP_FUNCTIONS} ]; then
     . ${TAP_FUNCTIONS}
 else

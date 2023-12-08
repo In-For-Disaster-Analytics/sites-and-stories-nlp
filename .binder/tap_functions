@@ -1,0 +1,36 @@
+
+#!/bin/bash
+#
+# These functions synchronize port openings with the TACC Analysis Portal (TAP).
+# Using these ensure that command-line jobs do not collide with TAP-launched jobs
+#
+# last update: pnav 20220126
+#
+
+function tap_get_port()
+{
+    local TAP_PORT_REQUEST_UUID="9d497fc2-914e-4d45-9a7b-331b26185669"
+    local TAP_PORT_JSON=$(curl -skL http://tap.tacc.utexas.edu/port-request/${TAP_PORT_REQUEST_UUID})
+    local TAP_PORT=$(/bin/python3 -c "import json; print(json.loads('${TAP_PORT_JSON}')['port'])" 2> /dev/null)
+    if [ -z "${TAP_PORT}" ]; then
+        # fall back to a random port number in the debug/dev TAP range. No whammies!
+        local TAP_PORT_START=60800
+        local TAP_PORT_RANGE=200
+        TAP_PORT=$((${TAP_PORT_START} + ${RANDOM} % ${TAP_PORT_RANGE}))
+    fi
+    echo ${TAP_PORT}
+                                                                 1,1           Top
+
+function tap_release_port()
+{
+    local TAP_PORT="${1:?TACC: must specify a port to release}"
+    local TAP_PORT_RELEASE_UUID="65c754cf-dd04-4850-a476-edf8bece8c5b"
+    echo $(curl -skL http://tap.tacc.utexas.edu/port-release/${TAP_PORT_RELEASE_UUID}/${TAP_PORT})
+}
+
+function tap_get_token()
+{
+    local TAP_TOKEN=$(/bin/python3 -c "from secrets import token_hex; print(token_hex())" 2> /dev/null)
+    echo ${TAP_TOKEN}
+}
+
