@@ -26,6 +26,32 @@ scratch = os.getenv('SCRATCH')
 print(scratch)
 corral_llms = "/corral-tacc/projects/TDIS/LLMs/HF"
 
+class Story_Engine():
+    def __init__(self):
+        self.llm = LLM()
+        self.corpus = Corpus()
+        self.accordion = widgets.Accordion(children=[self.llm.llm_select_widget, self.corpus.corpus_select_widget ])
+        self.accordion.set_title(0, 'Choose The LLM you want to use.')
+        self.accordion.set_title(1, 'Select the Corpus to base your queries on.')
+        
+        display(self.accordion)
+        
+    def create_index(self):
+        self.index = VectorStoreIndex.from_documents(self.corpus.documents, service_context=self.llm.service_context)
+    def create_query_engine(self, k=3, chunk_size=512):
+        # Better Explain Each of these steps. 
+        self.query_engine = CitationQueryEngine.from_args(
+        self.index,
+        similarity_top_k=k,
+        # here we can control how granular citation sources are, the default is 512
+        citation_chunk_size=512,
+        )
+    def query(self, text):
+        
+        self.response = self.query_engine.query(text)
+        display(Markdown(f"<b>{self.response}</b>"));
+        self.corpus.corpus_panel(self.response.source_nodes)
+        return self.response
 
 class LLM:
     def __init__(self, embed_model = "local:BAAI/bge-small-en"):
@@ -37,7 +63,7 @@ class LLM:
             icon='check'
         )
         self.embed_model = embed_model 
-
+        self.model_loaded = False
         self.dropdown = widgets.Dropdown(
             options=['LLAMA2 7B',"LLAMA2 7B CHAT", 'LLAMA2 13B', 'LLAMA2 13B CHAT'],
             value='LLAMA2 13B CHAT',
@@ -48,8 +74,8 @@ class LLM:
                         "LLAMA2 7B CHAT": "Llama7bchat",
                         "LLAMA2 13B":  "Llama-2-13b-hf",
                         "LLAMA2 13B CHAT": "Llama-2-13b-chat-hf"}
-        display(self.dropdown)
-        display(self.button)
+        self.llm_select_widget = widgets.HBox([self.dropdown, self.button])
+        
         self.button.on_click(self.on_button_clicked)
 
     def get_llm_path(self):
@@ -60,6 +86,7 @@ class LLM:
         if os.path.exists(self.path)==False:
             shutil.copytree(self.get_llm_path(), self.path )
         self.load_llm()
+        self.model_loaded=True
         
     def load_llm(self ):
         system_prompt = """<|SYSTEM|># Your system prompt here"""
@@ -85,8 +112,9 @@ class LLM:
 
 class Corpus:
     def __init__(self):
+        
         self.fc = FileChooser('./')
-        display(self.fc)
+        self.fc_chosen = False
         self.button = widgets.Button(
     description='Choose Corpus',
     disabled=False,
@@ -94,7 +122,7 @@ class Corpus:
     tooltip='Choose Corpus',
     icon='check'
 )
-        display(self.button)
+        self.corpus_select_widget = widgets.VBox([self.fc, self.button])
         self.button.on_click(self.load_corpus)
     def unzip(self, filename):
         with zipfile.ZipFile(self.fc.selected, 'r') as zip_ref:
@@ -113,7 +141,7 @@ class Corpus:
             self.unzip(filename)
         else: 
             self.corpus_path = path
-        self.required_exts = ['.pdf']
+        self.required_exts = ['.pdf', '.htm','.html']
         self.reader = SimpleDirectoryReader(
             input_dir=self.corpus_path,
             required_exts=self.required_exts,
@@ -121,5 +149,25 @@ class Corpus:
         )
         self.documents = self.reader.load_data()
         display(f"Loaded {len(self.documents)} docs")
-    def create_index(self, service_context):
-        self.index = VectorStoreIndex.from_documents(self.documents, service_context=service_context)
+        self.fc_chosen=True
+        
+
+    
+    def corpus_panel(self, tab_contents):
+        try:
+            children = [widgets.HTML(
+            value=f"<b>{node.metadata['file_name']}</b><br>{node.text}",
+            placeholder='Some HTML',
+            description=f"Page: {node.metadata['page_label']}")
+                    for node in tab_contents]
+        except: 
+            children = [widgets.HTML(
+            value=f"<b>{node.metadata['file_name']}</b><br>{node.text}",
+            placeholder='Some HTML',
+            description=f"Page: {i}")
+                    for i, node in enumerate(tab_contents)]
+        tab = widgets.Tab(layout=widgets.Layout( height='280px'))
+        tab.children = children
+        for i in range(len(children)):
+            tab.set_title(i, str(i))
+        display(tab)
