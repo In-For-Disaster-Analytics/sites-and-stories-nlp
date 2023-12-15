@@ -27,8 +27,8 @@ print(scratch)
 corral_llms = "/corral-tacc/projects/TDIS/LLMs/HF"
 
 
-class llm:
-    def __init__(self, embed_model = "local:BAAI/bge-small-en-v1.5"):
+class LLM:
+    def __init__(self, embed_model = "local:BAAI/bge-small-en"):
         self.button = widgets.Button(
             description='Load Model',
             disabled=False,
@@ -39,11 +39,11 @@ class llm:
         self.embed_model = embed_model 
 
         self.dropdown = widgets.Dropdown(
-    options=['LLAMA2 7B',"LLAMA2 7B CHAT", 'LLAMA2 13B', 'LLAMA2 13B CHAT'],
-    value='LLAMA2 13B CHAT',
-    description='Model:',
-    disabled=False,
-    )
+            options=['LLAMA2 7B',"LLAMA2 7B CHAT", 'LLAMA2 13B', 'LLAMA2 13B CHAT'],
+            value='LLAMA2 13B CHAT',
+            description='Model:',
+            disabled=False,
+            )
         self.location = {"LLAMA2 7B":"Llama7b",
                         "LLAMA2 7B CHAT": "Llama7bchat",
                         "LLAMA2 13B":  "Llama-2-13b-hf",
@@ -62,22 +62,28 @@ class llm:
         self.load_llm()
         
     def load_llm(self ):
+        system_prompt = """<|SYSTEM|># Your system prompt here"""
+        query_wrapper_prompt = PromptTemplate("<|USER|>{query_str}<|ASSISTANT|>")
         self.llm = HuggingFaceLLM(
-            context_window=4096,
-            max_new_tokens=2048,
-            generate_kwargs={"temperature": 0.0, "do_sample": False},
-            tokenizer_name=self.path,
-            model_name=self.path,
-            device_map="balanced",
-            model_kwargs={ "load_in_8bit": False, "cache_dir":f"{scratch}"},
-        )
+                context_window=4096,
+                max_new_tokens=2048,
+                system_prompt=system_prompt,
+                query_wrapper_prompt=query_wrapper_prompt,
+                generate_kwargs={"temperature": 0.0, "do_sample": False},
+                tokenizer_name=self.path,
+                model_name=self.path,
+                device_map="balanced",
+                model_kwargs={ "load_in_8bit": False, "cache_dir":f"{scratch}"},
+            )
+        self.set_service_context()
+    def set_service_context(self):
         self.service_context = ServiceContext.from_defaults(
                 llm=self.llm, embed_model=self.embed_model
             )
         
         set_global_service_context(self.service_context)
 
-class corpus:
+class Corpus:
     def __init__(self):
         self.fc = FileChooser('./')
         display(self.fc)
@@ -90,24 +96,29 @@ class corpus:
 )
         display(self.button)
         self.button.on_click(self.load_corpus)
-    def unzip(self):
+    def unzip(self, filename):
         with zipfile.ZipFile(self.fc.selected, 'r') as zip_ref:
             print(os.path.join(scratch, "Corpus"))
             zip_ref.extractall( os.path.join(scratch, "Corpus"))
-        self.corpus_path = os.path.join(scratch, "Corpus", self.fc.selected_filename.split(".")[0])
+        self.corpus_path = os.path.join(scratch, "Corpus", filename.split(".")[0])
         
     def load_corpus(self, button):
-        if self.fc.selected_filename.endswith('zip'):
-            self.unzip()
+        if self.fc.selected_filename ==None: 
+            filename = self.fc.default_filename
+            path = self.fc.default_path
+        else:
+            filename = self.fc.selected_filename
+            path = self.fc.selected_path
+        if filename.endswith('zip'):
+            self.unzip(filename)
         else: 
-            self.corpus_path =self.fc.selected_path
+            self.corpus_path = path
         self.required_exts = ['.pdf']
         self.reader = SimpleDirectoryReader(
             input_dir=self.corpus_path,
             required_exts=self.required_exts,
             recursive=True,
         )
-        
         self.documents = self.reader.load_data()
         display(f"Loaded {len(self.documents)} docs")
     def create_index(self, service_context):
