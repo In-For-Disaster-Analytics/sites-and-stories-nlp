@@ -4,7 +4,7 @@ import zipfile
 
 from ipyfilechooser import FileChooser # Documentation: https://github.com/crahan/ipyfilechooser
 import os
-import shutil
+import subprocess
 import os
 import logging
 import sys
@@ -83,8 +83,11 @@ class LLM:
         
     def on_button_clicked(self, path):
         self.path = os.path.join(scratch,  self.location[self.dropdown.value])
-        if os.path.exists(self.path)==False:
-            shutil.copytree(self.get_llm_path(), self.path )
+        
+        subprocess.call(["rsync", self.get_llm_path(), self.path])
+
+            
+          
         self.load_llm()
         self.model_loaded=True
         
