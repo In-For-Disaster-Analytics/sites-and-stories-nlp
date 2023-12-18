@@ -10,6 +10,7 @@ dependencies:
   - seaborn
   - umap-learn
   - ipykernel
+  - jupyter
   - ipywidgets
   - pip:
       - ema-workbench
