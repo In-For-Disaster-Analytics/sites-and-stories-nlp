@@ -1,6 +1,7 @@
 name: llm
 channels:
   - defaults
+  - pytorch 
 dependencies:
   - hdbscan
   - numpy
@@ -10,6 +11,8 @@ dependencies:
   - seaborn
   - umap-learn
   - ipykernel
+  - pytorch 
+  - torchvision
   - ipywidgets
   - pip:
       - ema-workbench
