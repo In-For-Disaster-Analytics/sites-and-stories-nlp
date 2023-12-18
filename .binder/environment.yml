@@ -6,7 +6,6 @@ dependencies:
   - hdbscan
   - numpy
   - pandas
-  - python==3.9
   - scikit-learn
   - seaborn
   - umap-learn
@@ -18,11 +17,7 @@ dependencies:
       - llama-cpp-python
       - llama-index=0.9.15
       - python-dotenv
-      - torch
-      - torchvision
-      - torchaudio
       - transformers
-      - transformers[torch]
       - ipyfilechooser 
       - accelerate
       - pypdf
