@@ -4,10 +4,6 @@ channels:
   - pytorch 
   - nvidia
 dependencies:
-  - pytorch
-  - torchvision
-  - torchaudio 
-  - pytorch-cuda=12.1 
   - hdbscan
   - numpy
   - pandas
@@ -15,15 +11,15 @@ dependencies:
   - seaborn
   - umap-learn
   - ipykernel
-  - jupyter
   - ipywidgets
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pytorch-cuda=12.1 
   - pip:
-      - ema-workbench
       - huggingface-hub
-      - llama-cpp-python
       - llama-index==0.9.15
-      - python-dotenv
       - transformers
-      - ipyfilechooser 
       - accelerate
       - pypdf
+      - ipyfilechooser
