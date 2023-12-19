@@ -1,25 +1,16 @@
 name: llm
 channels:
-  - defaults
-  - pytorch 
-  - nvidia
+  - conda-forge
 dependencies:
+  - pytorch
+  - pytorch-cuda=12.1
+  - torchaudio
+  - torchvision
   - hdbscan
+  - ipykernel
+  - ipywidgets
   - numpy
   - pandas
   - scikit-learn
   - seaborn
   - umap-learn
-  - ipykernel
-  - ipywidgets
-  - pytorch
-  - torchvision
-  - torchaudio
-  - pytorch-cuda=12.1 
-  - pip:
-      - huggingface-hub
-      - llama-index==0.9.15
-      - transformers
-      - accelerate
-      - pypdf
-      - ipyfilechooser
