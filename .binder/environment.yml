@@ -2,7 +2,12 @@ name: llm
 channels:
   - defaults
   - pytorch 
+  - nvidia
 dependencies:
+  - pytorch
+  - torchvision
+  - torchaudio 
+  - pytorch-cuda=12.1 
   - hdbscan
   - numpy
   - pandas
