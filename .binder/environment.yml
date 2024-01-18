@@ -16,3 +16,12 @@ dependencies:
   - scikit-learn
   - seaborn
   - umap-learn
+  - openai
+  - spacy
+  - networkx
+  - matplotlib
+  - plotly
+  - freetype=2.10.4
+  - python-docx
+  - python-dotenv
+  - bibtexparser
