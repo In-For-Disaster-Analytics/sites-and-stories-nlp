@@ -12,7 +12,7 @@ from llama_index.prompts import PromptTemplate
 from pathlib import Path
 from llama_index import SimpleDirectoryReader, VectorStoreIndex, ServiceContext, set_global_service_context
 import time
-from .utils import multi_copy
+from utils import multi_copy
 
 import torch
 
