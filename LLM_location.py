@@ -13,7 +13,7 @@ from pathlib import Path
 from llama_index import SimpleDirectoryReader, VectorStoreIndex, ServiceContext, set_global_service_context
 import time
 from utils import multi_copy
-
+from transformers import AutoTokenizer, AutoModelForCausalLM, TextStreamer, __version__
 import torch
 
 
@@ -77,6 +77,8 @@ class Story_Engine():
                 # here we can control how granular citation sources are, the default is 512
                 citation_chunk_size=512,
             )
+        else: 
+            self.query_engine = self.index.as_query_engine(streaming=True)
    
     def query(self, text:str):
         """Function that prompts the query engine, and organizes the responses. Defaults to organizings citations below. 
@@ -95,7 +97,8 @@ class Story_Engine():
 class LLM:
     """Large Language Model Wrapper Class
     """
-    def __init__(self, embed_model = "local:BAAI/bge-small-en"):
+    def __init__(self, embed_model = "local:BAAI/bge-small-en"): 
+        #alternative embed: "local:all-MiniLM-L6-v2"
         """Initialize GUI for model. Allows for selecting local models through a drop down."""
         self.button = widgets.Button(
             description='Load Model',
@@ -107,7 +110,7 @@ class LLM:
         self.embed_model = embed_model 
         self.model_loaded = False
         self.dropdown = widgets.Dropdown(
-            options=['LLAMA2 7B',"LLAMA2 7B CHAT", 'LLAMA2 13B', 'LLAMA2 13B CHAT',
+            options=['LLAMA2 7B',"LLAMA2 7B CHAT", 'LLAMA2 13B', 'LLAMA2 13B CHAT',"LLAMA2 70B CHAT",
                      'Zephyr'
                      ],
             value='LLAMA2 13B CHAT',
@@ -118,6 +121,7 @@ class LLM:
                         "LLAMA2 7B CHAT": "Llama7bchat",
                         "LLAMA2 13B":  "Llama-2-13b-hf",
                         "LLAMA2 13B CHAT": "Llama-2-13b-chat-hf",
+                         "LLAMA2 70B CHAT":"Llama-2-70b-chat-hf",
                         "Zephyr": "zephyr-7b-beta"
                         }
         self.llm_select_widget = widgets.HBox([self.dropdown, self.button])
@@ -157,14 +161,23 @@ class LLM:
             max_new_tokens (int, optional): Total number of characters the LLM can respond withl. Defaults to 1024.
         """
         query_wrapper_prompt = PromptTemplate("<|USER|>{query_str}<|ASSISTANT|>")
+        self.model = AutoModelForCausalLM.from_pretrained(self.path, 
+                                             device_map='auto', 
+                                             torch_dtype=torch.float16, 
+                                             rope_scaling={"type": "dynamic", "factor": 2},
+                                             load_in_8bit=True
+                                            ) 
+        self.tokenizer = AutoTokenizer.from_pretrained(self.path)
         self.llm = HuggingFaceLLM(
                 context_window=context_window,
                 max_new_tokens=max_new_tokens,
                 system_prompt=system_prompt,
                 query_wrapper_prompt=query_wrapper_prompt,
                 generate_kwargs={"temperature": 0.1, "do_sample": True},
-                tokenizer_name=self.path,
-                model_name=self.path,
+                # tokenizer_name=self.path,
+                # model_name=self.path,
+                model=self.model,
+                tokenizer = self.tokenizer,
                 device_map="balanced",
                 model_kwargs={ "load_in_8bit": False, "cache_dir":f"{scratch}"},
             )
@@ -174,6 +187,8 @@ class LLM:
         """Sets the model and embed model for querying
         """
         self.service_context = ServiceContext.from_defaults(
+                num_output=256,  # The amount of token-space to leave in input for generation.
+
                 llm=self.llm, embed_model=self.embed_model
             )
         
@@ -206,7 +221,8 @@ class Corpus:
             zip_ref.extractall( os.path.join(scratch, "Corpus"))
         self.corpus_path = os.path.join(scratch, "Corpus", filename.split(".")[0])
         
-    def load_corpus(self):
+    def load_corpus(self, x):
+        print(x)
         """Once the corpus is selected, Load the corpus into memory. 
         """
         self.button.button_style = 'warning'
