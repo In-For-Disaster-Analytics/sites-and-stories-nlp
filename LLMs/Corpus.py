@@ -6,6 +6,7 @@ import os
 
 
 from llama_index import SimpleDirectoryReader
+scratch = os.getenv('SCRATCH') 
 
 class Corpus:
     def __init__(self):
