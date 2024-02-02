@@ -18,9 +18,7 @@ dependencies:
   - umap-learn
   - matplotlib
   - plotly
-  - datasets
-  - bertopic
-  - spacy
+
 
 
 
