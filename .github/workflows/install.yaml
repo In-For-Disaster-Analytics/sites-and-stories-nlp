@@ -31,6 +31,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           environment-file: .binder/environment.yml
           auto-update-conda: false
+          activate-environment: llm
       - name: List conda environment
         run: conda env list
       - name: List conda packages
