@@ -26,5 +26,5 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: ${{ matrix.python-version }}
-          environment-file: binder/environment.yml
+          environment-file: .binder/environment.yml
           auto-update-conda: false
