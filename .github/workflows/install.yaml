@@ -1,0 +1,27 @@
+# install conda enviroment
+
+name: Create and publish a Docker image
+
+on:
+  push:
+    branches: "dev"
+    tags:
+      - "*"
+  pull_request:
+    branches: "dev"
+
+jobs:
+  example-1:
+    name: Ex1 (${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+        python-version: ["3.11"]
+    steps:
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+          environment-file: binder/environment.yml
+          auto-update-conda: false
