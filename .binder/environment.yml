@@ -16,3 +16,9 @@ dependencies:
   - scikit-learn
   - seaborn
   - umap-learn
+  - matplotlib
+  - plotly
+
+
+
+

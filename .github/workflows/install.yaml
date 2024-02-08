@@ -19,9 +19,22 @@ jobs:
       matrix:
         os: ["ubuntu-latest"]
         python-version: ["3.11", "3.12"]
+    defaults:
+      run:
+        shell: bash -el {0}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: ${{ matrix.python-version }}
-          environment-file: binder/environment.yml
+          environment-file: .binder/environment.yml
           auto-update-conda: false
+          activate-environment: llm
+      - name: List conda environment
+        run: conda env list
+      - name: List conda packages
+        run: conda list
+      - name: Install pip dependencies
+        run: pip install --no-cache-dir -r .binder/requirements.txt
