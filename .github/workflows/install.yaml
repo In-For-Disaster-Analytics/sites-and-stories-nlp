@@ -36,3 +36,5 @@ jobs:
         run: conda env list
       - name: List conda packages
         run: conda list
+      - name: Install pip dependencies
+        run: pip install --no-cache-dir -r .binder/requirements.txt
