@@ -24,7 +24,7 @@ The [LLM_location.py](LLM_location.py) file provides the framework to run the no
 
 Alternatively you can use pieces within the LLM_location file to develop your own system.
 
-## Running the Coookbook
+## Running the Cookbook
 
 ### Parameters
 
