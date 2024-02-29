@@ -1,5 +1,6 @@
 accelerate==0.25.0
 ollama
+nbformat
 huggingface-hub==0.19.4
 ipyfilechooser==0.6.0
 llama-index==0.9.15
