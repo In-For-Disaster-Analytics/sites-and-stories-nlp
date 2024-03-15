@@ -11,3 +11,4 @@ spacy==3.7.0
 datasets==2.16.1
 neo4j
 langchain_core
+chromadb
