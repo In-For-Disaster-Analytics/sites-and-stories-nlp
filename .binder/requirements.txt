@@ -9,3 +9,5 @@ transformers==4.36.2
 bertopic==0.16.0
 spacy==3.7.0
 datasets==2.16.1
+neo4j
+langchain_core
