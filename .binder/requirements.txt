@@ -4,8 +4,7 @@ nbformat
 huggingface-hub==0.19.4
 ipyfilechooser==0.6.0
 llama-index==0.9.15
-pymupdf==1.23.4
-pypdf==3.17.3
+pymupdf==1.24.5
 transformers==4.36.2
 bertopic==0.16.0
 spacy==3.7.0
