@@ -20,6 +20,6 @@ dependencies:
   - accelerate
   - ollama
   - llama-index
-  - transformers
+  - transformers>=0.20
   - bitsandbytes
   - peft
