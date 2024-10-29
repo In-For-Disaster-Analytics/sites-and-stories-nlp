@@ -21,3 +21,5 @@ dependencies:
   - ollama
   - llama-index
   - transformers
+  - bitsandbytes
+  - peft
