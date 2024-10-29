@@ -17,3 +17,7 @@ dependencies:
   - scikit-learn
   - seaborn
   - umap-learn
+  - accelerate
+  - ollama
+  - llama-index
+  - transformers
