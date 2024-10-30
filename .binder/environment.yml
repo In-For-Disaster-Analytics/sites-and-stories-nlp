@@ -11,7 +11,7 @@ dependencies:
   - hdbscan
   - ipykernel
   - ipywidgets
-  - numpy
+  - numpy<2.0
   - pandas
   - spacy
   - scikit-learn
