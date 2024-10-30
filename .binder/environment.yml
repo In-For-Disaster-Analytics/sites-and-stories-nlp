@@ -1,6 +1,7 @@
 name: llm
 channels:
   - conda-forge
+  - pytorch 
   - nvidia
 dependencies:
   - pytorch
@@ -10,14 +11,9 @@ dependencies:
   - hdbscan
   - ipykernel
   - ipywidgets
-  - numpy<=2.0
+  - numpy
   - pandas
   - spacy
   - scikit-learn
   - seaborn
   - umap-learn
-  - accelerate
-  - ollama
-  - llama-index
-  - bitsandbytes
-  - peft
