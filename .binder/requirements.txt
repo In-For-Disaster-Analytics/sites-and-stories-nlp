@@ -14,3 +14,4 @@ neo4j
 langchain_core
 chromadb
 langchain
+bitsandbytes
