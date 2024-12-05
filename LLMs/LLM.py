@@ -1,6 +1,8 @@
 import ipywidgets as widgets #documentation: https://ipywidgets.readthedocs.io/en/7.x/examples/Widget%20Events.html
 import os
 from llama_index.llms import HuggingFaceLLM
+from llama_index.llms.ollama import Ollama
+import ollama
 from llama_index.prompts import PromptTemplate
 from llama_index import  ServiceContext, set_global_service_context
 from LLMs.utils import multi_copy
@@ -38,10 +40,8 @@ class LLM:
         self.embed_model = embed_model 
         self.model_loaded = False
         self.dropdown = widgets.Dropdown(
-            options=['LLAMA2 7B',"LLAMA2 7B CHAT", 'LLAMA2 13B', 'LLAMA2 13B CHAT',"LLAMA2 70B CHAT",
-                     'Zephyr'
-                     ],
-            value='LLAMA2 13B CHAT',
+            options=['mixtral', 'mistral', 'llama2:7b', 'llama2:70b', 'llama2:13b'],
+            value='llama2:13b',
             description='Model:',
             disabled=False,
             )
@@ -71,10 +71,10 @@ class LLM:
             path (str): Directory Location
         """
         self.button.button_style = "warning"
-        self.path = os.path.join(scratch,  self.location[self.dropdown.value])
+        # self.path = os.path.join(scratch,  self.location[self.dropdown.value])
         
-        ## Multiprocessing copy of the LLM to ensure speedy transfers. 
-        multi_copy( self.path, self.get_llm_path())
+        # ## Multiprocessing copy of the LLM to ensure speedy transfers. 
+        # multi_copy( self.path, self.get_llm_path())
         self.load_llm()
         self.model_loaded=True
         self.button.button_style = 'success'
@@ -88,36 +88,34 @@ class LLM:
             context_window (int, optional): Total number of characters that can be loaded into the prompt at once. . Defaults to 4096.
             max_new_tokens (int, optional): Total number of characters the LLM can respond withl. Defaults to 1024.
         """
-        query_wrapper_prompt = PromptTemplate("<|USER|>{query_str}<|ASSISTANT|>")
-        self.model = AutoModelForCausalLM.from_pretrained(self.path, 
-                                             device_map='auto', 
-                                             torch_dtype=torch.float16, 
-                                             rope_scaling={"type": "dynamic", "factor": 2},
-                                             load_in_8bit=True
-                                            ) 
-        self.tokenizer = AutoTokenizer.from_pretrained(self.path)
-        self.llm = HuggingFaceLLM(
-                context_window=context_window,
-                max_new_tokens=max_new_tokens,
-                system_prompt=system_prompt,
-                query_wrapper_prompt=query_wrapper_prompt,
-                generate_kwargs={"temperature": 0.1, "do_sample": True},
-                # tokenizer_name=self.path,
-                # model_name=self.path,
-                model=self.model,
-                tokenizer = self.tokenizer,
-                device_map="balanced",
-                model_kwargs={ "load_in_8bit": False, "cache_dir":f"{scratch}"},
-            )
+        # query_wrapper_prompt = PromptTemplate("<|USER|>{query_str}<|ASSISTANT|>")
+        # self.model = AutoModelForCausalLM.from_pretrained(self.path, 
+        #                                      device_map='auto', 
+        #                                      torch_dtype=torch.float16, 
+        #                                      rope_scaling={"type": "dynamic", "factor": 2},
+        #                                      load_in_8bit=True
+        #                                     ) 
+        # self.tokenizer = AutoTokenizer.from_pretrained(self.path)
+        ollama.pull(self.dropdown.value)
+        self.llm = Ollama(model=self.dropdown.value)
+        # self.llm = HuggingFaceLLM(
+        #         context_window=context_window,
+        #         max_new_tokens=max_new_tokens,
+        #         system_prompt=system_prompt,
+        #         query_wrapper_prompt=query_wrapper_prompt,
+        #         generate_kwargs={"temperature": 0.1, "do_sample": True},
+        #         # tokenizer_name=self.path,
+        #         # model_name=self.path,
+        #         model=self.model,
+        #         tokenizer = self.tokenizer,
+        #         device_map="balanced",
+        #         model_kwargs={ "load_in_8bit": False, "cache_dir":f"{scratch}"},
+        #     )
         self.set_service_context()
 
     def set_service_context(self):
         """Sets the model and embed model for querying
         """
-        self.service_context = ServiceContext.from_defaults(
-                num_output=256,  # The amount of token-space to leave in input for generation.
-
-                llm=self.llm, embed_model=self.embed_model
-            )
+        self.service_context = ServiceContext.from_defaults(llm=self.llm, embed_model="local:BAAI/bge-small-en")
         
         set_global_service_context(self.service_context)
